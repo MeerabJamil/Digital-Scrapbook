@@ -1,7 +1,7 @@
 {
   "name": "scrapbook-backend",
-  "version": "1.0.0",
-  "description": "Digital Scrapbook & Memory Journal - Backend (Auth + Database, Week 2)",
+  "version": "1.1.0",
+  "description": "Digital Scrapbook & Memory Journal - Backend (Core CRUD APIs, Week 3)",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {
@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.0"
   },

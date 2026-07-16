@@ -4,6 +4,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const albumRoutes = require("./routes/albumRoutes");
+const memoryRoutes = require("./routes/memoryRoutes");
+const { apiLimiter, authLimiter } = require("./middleware/rateLimiter");
+const { notFound, errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 
@@ -17,10 +21,19 @@ app.use(
 );
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
-app.use("/api/auth", authRoutes);
+
+// general safety-net limiter on all API traffic, plus a tighter one
+// specifically on auth to slow down brute force login/register attempts
+app.use("/api", apiLimiter);
+app.use("/api/auth", authLimiter, authRoutes);
+app.use("/api/albums", albumRoutes);
+app.use("/api/memories", memoryRoutes);
 
 // fallback 404 for anything else under /api
-app.use("/api", (req, res) => res.status(404).json({ message: "Route not found." }));
+app.use("/api", notFound);
+
+// centralized error handler — must be registered last
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

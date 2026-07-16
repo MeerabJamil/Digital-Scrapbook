@@ -1,0 +1,159 @@
+{
+  "info": {
+    "name": "Digital Scrapbook — Backend (Week 2 + Week 3)",
+    "description": "Auth (Week 2) plus Album & Memory CRUD (Week 3). Uses cookie-based sessions — enable Postman's cookie jar and run requests in order within a folder.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000" },
+    { "key": "album_id", "value": "" },
+    { "key": "memory_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Meerab\",\n  \"email\": \"meerab@test.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"meerab@test.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Me (current session)",
+          "request": { "method": "GET", "url": "{{base_url}}/api/auth/me" }
+        },
+        {
+          "name": "Logout",
+          "request": { "method": "POST", "url": "{{base_url}}/api/auth/logout" }
+        }
+      ]
+    },
+    {
+      "name": "Albums",
+      "item": [
+        {
+          "name": "Create Album",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const body = pm.response.json();",
+                  "  pm.collectionVariables.set('album_id', body.album._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/albums",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"First Year in Lahore\",\n  \"coverPhoto\": \"https://picsum.photos/seed/lahore-cover/400/400\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Albums",
+          "request": { "method": "GET", "url": "{{base_url}}/api/albums" }
+        },
+        {
+          "name": "Get Single Album",
+          "request": { "method": "GET", "url": "{{base_url}}/api/albums/{{album_id}}" }
+        },
+        {
+          "name": "Update Album",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/albums/{{album_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"First Year in Lahore (Updated)\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Album",
+          "request": { "method": "DELETE", "url": "{{base_url}}/api/albums/{{album_id}}" }
+        }
+      ]
+    },
+    {
+      "name": "Memories",
+      "item": [
+        {
+          "name": "Create Memory (in album)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const body = pm.response.json();",
+                  "  pm.collectionVariables.set('memory_id', body.memory._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/albums/{{album_id}}/memories",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"photo\": \"https://picsum.photos/seed/lahore1/400/400\",\n  \"note\": \"Found a tiny rooftop café near Anarkali.\",\n  \"date\": \"2025-08-14\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Memories in Album",
+          "request": { "method": "GET", "url": "{{base_url}}/api/albums/{{album_id}}/memories" }
+        },
+        {
+          "name": "Get Single Memory",
+          "request": { "method": "GET", "url": "{{base_url}}/api/memories/{{memory_id}}" }
+        },
+        {
+          "name": "Update Memory",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/memories/{{memory_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Updated note — stayed for three hours this time.\",\n  \"mood\": \"Nostalgic\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Memory",
+          "request": { "method": "DELETE", "url": "{{base_url}}/api/memories/{{memory_id}}" }
+        }
+      ]
+    }
+  ]
+}
