@@ -32,11 +32,14 @@ async function seed() {
   const album = await Album.create({
     title: "First Year in Lahore",
     coverPhoto: "https://picsum.photos/seed/lahore-cover/400/400",
+    cover: "🧳",
+    color: "peach",
     user: user._id,
   });
 
   const memory = await Memory.create({
-    photo: "https://picsum.photos/seed/lahore1/400/400",
+    title: "Rooftop café near Anarkali",
+    photo: "☕",
     note: "Found a tiny rooftop café near Anarkali. Sat there for two hours watching kites in the sky.",
     date: new Date("2025-08-14"),
     mood: "Content",

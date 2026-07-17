@@ -9,8 +9,17 @@ const albumSchema = new mongoose.Schema(
       maxlength: 100,
     },
     coverPhoto: {
-      type: String, // URL to the cover image
+      type: String, // URL to a real cover image, for when photo upload is added
       default: "",
+    },
+    cover: {
+      type: String, // emoji shown on the album "book" in the shelf view
+      default: "📔",
+    },
+    color: {
+      type: String, // theme tone used by the frontend for the album's book color + spine
+      enum: ["peach", "sage", "lavender", "blush", "gold"],
+      default: "peach",
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,

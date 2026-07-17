@@ -2,15 +2,27 @@ const mongoose = require("mongoose");
 const Album = require("../models/Album");
 const Memory = require("../models/Memory");
 const AIInsight = require("../models/AIInsight");
+const { spineColorFor } = require("../utils/colorTheme");
 
 function isValidId(id) {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
+// shapes an Album document the way the frontend's AlbumBook / AlbumDetails
+// pages expect: `count` instead of a separate query, and a computed
+// `spineColor` derived from the stored `color` tone.
+function toAlbumView(album, memoryCount) {
+  return {
+    ...album.toObject(),
+    count: memoryCount,
+    spineColor: spineColorFor(album.color),
+  };
+}
+
 // POST /api/albums
 async function createAlbum(req, res, next) {
   try {
-    const { title, coverPhoto } = req.body;
+    const { title, coverPhoto, cover, color } = req.body;
 
     if (!title || !title.trim()) {
       return res.status(400).json({ message: "Album title is required." });
@@ -19,19 +31,18 @@ async function createAlbum(req, res, next) {
     const album = await Album.create({
       title: title.trim(),
       coverPhoto: coverPhoto || "",
+      cover: cover || "📔",
+      color: color || "peach",
       user: req.user._id,
     });
 
-    return res.status(201).json({ message: "Album created.", album });
+    return res.status(201).json({ message: "Album created.", album: toAlbumView(album, 0) });
   } catch (err) {
     next(err);
   }
 }
 
 // GET /api/albums
-// Returns every album owned by the logged in user, newest first, each
-// tagged with how many memories it holds so a dashboard card has something
-// to show without a second round trip per album.
 async function getAlbums(req, res, next) {
   try {
     const albums = await Album.find({ user: req.user._id }).sort({ createdAt: -1 });
@@ -43,10 +54,7 @@ async function getAlbums(req, res, next) {
     ]);
     const countByAlbum = Object.fromEntries(counts.map((c) => [c._id.toString(), c.count]));
 
-    const albumsWithCounts = albums.map((a) => ({
-      ...a.toObject(),
-      memoryCount: countByAlbum[a._id.toString()] || 0,
-    }));
+    const albumsWithCounts = albums.map((a) => toAlbumView(a, countByAlbum[a._id.toString()] || 0));
 
     return res.json({ albums: albumsWithCounts });
   } catch (err) {
@@ -63,7 +71,9 @@ async function getAlbum(req, res, next) {
     const album = await Album.findOne({ _id: id, user: req.user._id });
     if (!album) return res.status(404).json({ message: "Album not found." });
 
-    return res.json({ album });
+    const count = await Memory.countDocuments({ album: album._id });
+
+    return res.json({ album: toAlbumView(album, count) });
   } catch (err) {
     next(err);
   }
@@ -75,7 +85,7 @@ async function updateAlbum(req, res, next) {
     const { id } = req.params;
     if (!isValidId(id)) return res.status(400).json({ message: "Invalid album id." });
 
-    const { title, coverPhoto } = req.body;
+    const { title, coverPhoto, cover, color } = req.body;
     const updates = {};
 
     if (title !== undefined) {
@@ -83,6 +93,8 @@ async function updateAlbum(req, res, next) {
       updates.title = title.trim();
     }
     if (coverPhoto !== undefined) updates.coverPhoto = coverPhoto;
+    if (cover !== undefined) updates.cover = cover;
+    if (color !== undefined) updates.color = color;
 
     const album = await Album.findOneAndUpdate({ _id: id, user: req.user._id }, updates, {
       new: true,
@@ -90,16 +102,15 @@ async function updateAlbum(req, res, next) {
     });
     if (!album) return res.status(404).json({ message: "Album not found." });
 
-    return res.json({ message: "Album updated.", album });
+    const count = await Memory.countDocuments({ album: album._id });
+
+    return res.json({ message: "Album updated.", album: toAlbumView(album, count) });
   } catch (err) {
     next(err);
   }
 }
 
 // DELETE /api/albums/:id
-// Cascades: an album's memories (and each memory's AI reflection) are
-// deleted along with it, so we never leave orphaned Memory/AIInsight
-// documents pointing at an album that no longer exists.
 async function deleteAlbum(req, res, next) {
   try {
     const { id } = req.params;

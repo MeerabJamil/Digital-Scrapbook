@@ -2,8 +2,14 @@ const mongoose = require("mongoose");
 
 const memorySchema = new mongoose.Schema(
   {
+    title: {
+      type: String,
+      required: [true, "Title is required"],
+      trim: true,
+      maxlength: 120,
+    },
     photo: {
-      type: String, // URL to the uploaded photo
+      type: String, // emoji for now (frontend's sticker-style photo); a real image URL once upload is added
       required: [true, "Photo is required"],
     },
     note: {

@@ -71,7 +71,7 @@
             "url": "{{base_url}}/api/albums",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"First Year in Lahore\",\n  \"coverPhoto\": \"https://picsum.photos/seed/lahore-cover/400/400\"\n}"
+              "raw": "{\n  \"title\": \"First Year in Lahore\",\n  \"cover\": \"🧳\",\n  \"color\": \"peach\"\n}"
             }
           }
         },
@@ -125,7 +125,7 @@
             "url": "{{base_url}}/api/albums/{{album_id}}/memories",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"photo\": \"https://picsum.photos/seed/lahore1/400/400\",\n  \"note\": \"Found a tiny rooftop café near Anarkali.\",\n  \"date\": \"2025-08-14\"\n}"
+              "raw": "{\n  \"title\": \"Rooftop café near Anarkali\",\n  \"photo\": \"☕\",\n  \"note\": \"Found a tiny rooftop café near Anarkali.\",\n  \"date\": \"2025-08-14\"\n}"
             }
           }
         },

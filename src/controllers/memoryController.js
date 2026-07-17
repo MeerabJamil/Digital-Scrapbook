@@ -22,7 +22,8 @@ async function createMemory(req, res, next) {
     const album = await findOwnedAlbum(albumId, req.user._id);
     if (!album) return res.status(404).json({ message: "Album not found." });
 
-    const { photo, note, date, mood } = req.body;
+    const { title, photo, note, date, mood } = req.body;
+    if (!title || !title.trim()) return res.status(400).json({ message: "Title is required." });
     if (!photo) return res.status(400).json({ message: "Photo is required." });
     if (!note || !note.trim()) return res.status(400).json({ message: "Note is required." });
     if (!date || isNaN(Date.parse(date))) {
@@ -30,6 +31,7 @@ async function createMemory(req, res, next) {
     }
 
     const memory = await Memory.create({
+      title: title.trim(),
       photo,
       note: note.trim(),
       date: new Date(date),
@@ -87,7 +89,11 @@ async function updateMemory(req, res, next) {
       return res.status(404).json({ message: "Memory not found." });
     }
 
-    const { photo, note, date, mood } = req.body;
+    const { title, photo, note, date, mood } = req.body;
+    if (title !== undefined) {
+      if (!title.trim()) return res.status(400).json({ message: "Title cannot be empty." });
+      memory.title = title.trim();
+    }
     if (photo !== undefined) memory.photo = photo;
     if (note !== undefined) {
       if (!note.trim()) return res.status(400).json({ message: "Note cannot be empty." });
