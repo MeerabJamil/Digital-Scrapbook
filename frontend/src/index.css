@@ -1,0 +1,97 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Patrick+Hand&family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+@theme {
+  /* ---- Scrapbook palette ---- */
+  --color-cream: #FFF8F1;
+  --color-cream-deep: #FBF0E4;
+  --color-blush: #E9C5C5;
+  --color-blush-deep: #DDA9AC;
+  --color-sage: #C8D5B9;
+  --color-sage-deep: #AFC29B;
+  --color-sand: #F6E7D8;
+  --color-lavender: #DCCEF9;
+  --color-lavender-deep: #C7B3EE;
+  --color-peach: #FFD8BE;
+  --color-peach-deep: #FFC29D;
+  --color-cocoa: #7A5A45;
+  --color-cocoa-deep: #5C4130;
+  --color-terracotta: #C6704B;
+  --color-gold: #E8B84B;
+  --color-ink: #4A3B32;
+
+  --font-hand: "Caveat", cursive;
+  --font-tape: "Patrick Hand", cursive;
+  --font-body: "Quicksand", sans-serif;
+  --font-utility: "Nunito", sans-serif;
+
+  --shadow-paper: 0 2px 6px rgba(122, 90, 69, 0.12), 0 10px 24px rgba(122, 90, 69, 0.10);
+  --shadow-paper-lg: 0 8px 16px rgba(122, 90, 69, 0.14), 0 20px 44px rgba(122, 90, 69, 0.16);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+.paper-grain {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(122,90,69,0.04) 0, transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(122,90,69,0.03) 0, transparent 45%),
+    repeating-linear-gradient(45deg, rgba(122,90,69,0.015) 0px, rgba(122,90,69,0.015) 1px, transparent 1px, transparent 3px);
+}
+
+.font-hand { font-family: var(--font-hand); }
+.font-tape { font-family: var(--font-tape); }
+.font-utility { font-family: var(--font-utility); }
+
+.washi {
+  background-repeat: repeat;
+  background-size: 10px 10px;
+  opacity: 0.85;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-sand); }
+::-webkit-scrollbar-thumb { background: var(--color-blush-deep); border-radius: 8px; }
+
+:focus-visible {
+  outline: 3px solid var(--color-terracotta);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.btn-squish {
+  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1);
+}
+.btn-squish:active {
+  transform: scale(0.92);
+}
+
+.torn-edge {
+  position: relative;
+}
+.torn-edge::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 14px;
+  background: var(--color-cream);
+  clip-path: polygon(0% 100%, 2% 20%, 5% 90%, 8% 10%, 12% 80%, 16% 20%, 20% 100%, 24% 10%, 28% 90%, 32% 20%, 36% 80%, 40% 10%, 44% 100%, 48% 20%, 52% 90%, 56% 10%, 60% 80%, 64% 20%, 68% 100%, 72% 10%, 76% 90%, 80% 20%, 84% 80%, 88% 10%, 92% 100%, 96% 20%, 100% 90%, 100% 100%);
+}
