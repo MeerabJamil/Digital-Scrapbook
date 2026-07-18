@@ -1,4 +1,4 @@
-# Digital Scrapbook — "Petal & Page" 📔
+# Digital Scrapbook — "Petal & Page" 
 
 A cozy digital scrapbook & memory journal, built for the Tynovate AI + Web Development Internship 2026.
 
