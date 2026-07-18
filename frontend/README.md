@@ -1,4 +1,4 @@
-# Petal & Page 📔
+# Petal & Page 
 
 A cozy digital scrapbook & memory journal — built with React 18, Vite, Tailwind CSS v4, Framer Motion, React Router, Lucide Icons, and Recharts.
 
